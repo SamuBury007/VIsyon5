@@ -1,10 +1,10 @@
-# Usa un'immagine base Python
-FROM python:3.11-slim
+# Usa Python 3.11.7 (versione stabile e compatibile)
+FROM python:3.11.7-slim
 
 # Imposta la directory di lavoro
 WORKDIR /app
 
-# Installa le dipendenze di sistema per Playwright (minime)
+# Installa le dipendenze di sistema per Playwright
 RUN apt-get update && \
     apt-get install -y \
     wget \
@@ -25,17 +25,13 @@ RUN apt-get update && \
     libxshmfence1 \
     && rm -rf /var/lib/apt/lists/*
 
-# Copia i file delle dipendenze
+# Copia e installa le dipendenze Python
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Installa Playwright con Chromium (solo il necessario)
+# Installa Playwright e Chromium
 ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 RUN python -m playwright install chromium
-
-# IMPORTANTE: Imposta variabili per ridurre l'uso di memoria
-ENV NODE_OPTIONS="--max-old-space-size=256"
-ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=0
 
 # Copia tutto il codice
 COPY . .
