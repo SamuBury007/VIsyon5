@@ -9,7 +9,7 @@ import json
 import asyncio
 import requests
 from urllib.parse import urlparse, parse_qs, urlencode
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template_string
 
 app = Flask(__name__)
 
@@ -207,8 +207,13 @@ async def get_best_playlist(movie_url):
 
 @app.route('/')
 def index():
-    # Carica direttamente il file visyon.html posizionato dentro la cartella /templates
-    return render_template_string(open('visyon.html').read())
+    # Carica direttamente il file visyon.html posizionato nella stessa cartella
+    try:
+        with open('visyon.html', 'r', encoding='utf-8') as f:
+            html_content = f.read()
+        return html_content
+    except Exception as e:
+        return f"Errore nel caricare visyon.html: {e}", 500
 
 
 @app.route('/extract', methods=['POST'])
