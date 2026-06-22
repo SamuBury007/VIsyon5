@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: vidsrc-extractor
+    runtime: docker
+    repo: https://github.com/tuo-username/tuo-repo
+    plan: free
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: SECRET_KEY
+        value: vixsrc_extractor_secret_key_2024
+      - key: FLASK_APP
+        value: vidsrc_extractor.py
+      - key: FLASK_ENV
+        value: production
