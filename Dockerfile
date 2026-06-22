@@ -4,7 +4,7 @@ FROM python:3.11-slim
 # Imposta la directory di lavoro
 WORKDIR /app
 
-# Installa le dipendenze di sistema per Playwright
+# Installa le dipendenze di sistema per Playwright (minime)
 RUN apt-get update && \
     apt-get install -y \
     wget \
@@ -29,8 +29,13 @@ RUN apt-get update && \
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Installa Playwright e Chromium
+# Installa Playwright con Chromium (solo il necessario)
+ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 RUN python -m playwright install chromium
+
+# IMPORTANTE: Imposta variabili per ridurre l'uso di memoria
+ENV NODE_OPTIONS="--max-old-space-size=256"
+ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=0
 
 # Copia tutto il codice
 COPY . .
